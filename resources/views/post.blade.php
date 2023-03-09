@@ -9,5 +9,5 @@
         <p>{{ $post['body'] }}</p>
     </article>
 
-    <a href="/blog">Bact To Post</a>
+    <a href="/posts">Bact To Post</a>
 @endsection
