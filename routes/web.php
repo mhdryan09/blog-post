@@ -45,4 +45,8 @@ Route::get('/posts', [PostController::class, 'index']);
 // Halaman Single Post
 // tanda {} disebut wildcard, untuk mengambil apapun isi dari / (slash) nya
 // $slug, adalah judul-post-
-Route::get('posts/{slug}', [PostController::class, 'show']);
+// Route::get('posts/{slug}', [PostController::class, 'show']);
+
+// slug yg akan di-query untuk mendapatkan post yang unique
+// sehingga where nya itu, tidak hanya bisa dgn id, melainkan menggunakan slug
+Route::get('posts/{post:slug}', [PostController::class, 'show']);

@@ -19,14 +19,18 @@ class PostController extends Controller
         );
     }
 
-    // method untuk menampilkan detail dari satu postingan
-    public function show($slug)
+    // akan menerima id yg disimpan dalam $post
+    // dimana memiliki instance dari Model Class Post
+    // nama paramater ($post) nya harus sama dengan nama {$post} yang dikirim dari route nya, yaitu 'posts/{post}'
+    public function show(Post $post)
     {
         return view(
             'post',
             [
                 "title" => "Single Post",
-                "post" => Post::find($slug) // kita cari postingan berdasarkan slug nya
+                // "post" => Post::find($slug) // kita cari postingan berdasarkan slug nya
+
+                "post" => $post // ga perlu query, karena sudah otomatis dicarikan id sama laravel
             ]
         );
     }
