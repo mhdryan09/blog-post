@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
@@ -50,3 +51,27 @@ Route::get('/posts', [PostController::class, 'index']);
 // slug yg akan di-query untuk mendapatkan post yang unique
 // sehingga where nya itu, tidak hanya bisa dgn id, melainkan menggunakan slug
 Route::get('posts/{post:slug}', [PostController::class, 'show']);
+
+
+// Route untuk handel Halaman Categories
+Route::get('/categories', function () {
+    return view(
+        'categories',
+        [
+            'title' => 'Post Categories',
+            'categories' => Category::all() // ambil semua data category yg ada di model Category
+        ]
+    );
+});
+
+// Route untuk handle Category berdasarkan slug
+Route::get('/categories/{category:slug}', function (Category $category) {
+    return view(
+        'category',
+        [
+            'title' => $category->name,
+            'posts' => $category->posts,
+            'category' => $category->name
+        ]
+    );
+});
