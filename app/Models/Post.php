@@ -17,21 +17,17 @@ class Post extends Model
     // kolom yg ga boleh diisi (dijagain)
     protected $guarded = ['id'];
 
-    // cara untuk melakukan relasi tabel :
-
     // method untuk relasi tabel dgn category
     public function category()
     {
-        // mengembalikan relasi dari post terhadap model Category
-
         // belongsTo artinya 1 postingan punya 1 Category
         return $this->belongsTo(Category::class);
     }
 
-    // method untuk relasi tabel dgn user
-    public function user()
+    // kita ganti user_id dengan nama lain yaitu author
+    public function author()
     {
         // belongsTo artinya 1 postingan hanya dimiliki oleh 1 user
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
