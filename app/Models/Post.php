@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Post extends Model
 {
@@ -24,5 +26,12 @@ class Post extends Model
 
         // belongsTo artinya 1 postingan punya 1 Category
         return $this->belongsTo(Category::class);
+    }
+
+    // method untuk relasi tabel dgn user
+    public function user()
+    {
+        // belongsTo artinya 1 postingan hanya dimiliki oleh 1 user
+        return $this->belongsTo(User::class);
     }
 }

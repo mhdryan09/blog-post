@@ -16,6 +16,7 @@ class CreatePostsTable extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id'); // penghubung antar tabel post dan categories
+            $table->foreignId('user_id'); // penghubung antar tabel post dan user
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('excerpt');
