@@ -68,11 +68,11 @@ Route::get('/categories', function () {
 // Route untuk handle Category berdasarkan slug
 Route::get('/categories/{category:slug}', function (Category $category) {
     return view(
-        'category',
+        'posts',
         [
-            'title' => $category->name,
-            'posts' => $category->posts,
-            'category' => $category->name
+            'title' => "Post By Category : $category->name",
+            'posts' => $category->posts->load(['category', 'author'])
+            // load, untuk mempersingkat query dan tambahkan method dari model nya
         ]
     );
 });
@@ -82,8 +82,9 @@ Route::get('/authors/{author:username}', function (User $author) {
     return view(
         'posts',
         [
-            'title' => 'User Posts',
-            'posts' => $author->posts
+            'title' => "Post By Author : $author->name",
+            'posts' => $author->posts->load(['category', 'author'])
+            // load, untuk mempersingkat query dan tambahkan method dari model nya
         ]
     );
 });
