@@ -17,6 +17,9 @@ class Post extends Model
     // kolom yg ga boleh diisi (dijagain)
     protected $guarded = ['id'];
 
+    // properti untuk pemanggilan query dari category dan author
+    protected $with = ['category', 'author'];
+
     // method untuk relasi tabel dgn category
     public function category()
     {

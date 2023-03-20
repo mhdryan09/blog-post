@@ -21,7 +21,8 @@ Route::get('/', function () {
     return view(
         'home',
         [
-            "title" => "Home"
+            "title" => "Home",
+            "active" => "home",
         ]
     );
 });
@@ -31,6 +32,7 @@ Route::get('/about', function () {
         'about',
         [
             "title" => "About",
+            "active" => "about",
             "nama" => "Muhammad Ryan Pranata",
             "email" => "pranataryan91@gmail.com",
             "image" => "download.jpg"
@@ -60,6 +62,7 @@ Route::get('/categories', function () {
         'categories',
         [
             'title' => 'Post Categories',
+            "active" => "categories",
             'categories' => Category::all() // ambil semua data category yg ada di model Category
         ]
     );
@@ -71,6 +74,7 @@ Route::get('/categories/{category:slug}', function (Category $category) {
         'posts',
         [
             'title' => "Post By Category : $category->name",
+            "active" => "categories",
             'posts' => $category->posts->load(['category', 'author'])
             // load, untuk mempersingkat query dan tambahkan method dari model nya
         ]

@@ -14,9 +14,9 @@ class PostController extends Controller
             'posts',
             [
                 "title" => "All Post",
+                "active" => "posts",
                 // "posts" => Post::all() //  untuk mendapatkan semua data postingan
-                // with, untuk menghubungkan ke tabel lain dgn memanggil method yg ada di dlm model Post
-                "posts" => Post::with(['author', 'category'])->latest()->get() //  untuk mendapatkan data terakhir ditambahkan
+                "posts" => Post::latest()->get() //  untuk mendapatkan data terakhir ditambahkan
             ]
         );
     }
@@ -30,6 +30,7 @@ class PostController extends Controller
             'post',
             [
                 "title" => "Single Post",
+                "active" => "posts",
                 // "post" => Post::find($slug) // kita cari postingan berdasarkan slug nya
 
                 "post" => $post // ga perlu query, karena sudah otomatis dicarikan id sama laravel
