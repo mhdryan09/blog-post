@@ -20,6 +20,53 @@ class Post extends Model
     // properti untuk pemanggilan query dari category dan author
     protected $with = ['category', 'author'];
 
+    // method untuk filtering
+    // akan menerima parameter query
+    public function scopeFilter($query, array $filters)
+    {
+        // jika ada pencarian data
+
+        // jika ada variabel search, menggunakan method isset
+        // if (isset($filters['search']) ? $filters['search'] : false) {
+        //     // tambahkan kondisi berdasarkan judul dan body
+        //     return $query->where('title', 'like', '%' . $filters['search'] . '%')
+        //         ->orWhere('body', 'like', '%' . $filters['search'] . '%');
+        // }
+
+        // teknik Null coalescing operator (??)
+        // jika true, lakukan callback function -> ambil query lalu jika ada isinya, maka ambil search nya juga
+        // use digunakan untuk merujuk pada paramater dari callback function tersebut
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            return $query->where(function ($query) use ($search) {
+                // tambahkan kondisi berdasarkan judul dan body
+                $query->where('title', 'like', '%' . $search . '%')
+                    ->orWhere('body', 'like', '%' . $search . '%');
+            });
+        });
+
+        // filtering category
+        // versi callback function
+        $query->when($filters['category'] ?? false, function ($query, $category) {
+            // lakukan join tabel dgn tabel category dgn whereHas
+            return $query->whereHas('category', function ($query) use ($category) {
+                // tambahkan kondisi berdasarkan category 
+                $query->where('slug', $category);
+            });
+        });
+
+        // filtering author
+        // versi arrow function
+        $query->when(
+            $filters['author'] ?? false,
+            fn ($query, $author) =>
+            $query->whereHas(
+                'author',
+                fn ($query) =>
+                $query->where('username', $author)
+            )
+        );
+    }
+
     // method untuk relasi tabel dgn category
     public function category()
     {

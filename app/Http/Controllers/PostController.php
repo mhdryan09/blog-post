@@ -2,21 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\User;
 
 class PostController extends Controller
 {
     // method default
     public function index()
     {
+        $title = '';
+
+        // kalau ada category
+        if (request('category')) {
+            // cari category berdasarkan slug
+            $category = Category::firstWhere('slug', request('category'));
+            // timpa title nya
+            $title = ' in ' . $category->name;
+        }
+
+        // kalau ada author
+        if (request('author')) {
+            // cari author berdasarkan username
+            $author = User::firstWhere('username', request('author'));
+            // timpa title nya
+            $title = ' by ' . $author->name;
+        }
+
+
         return view(
             'posts',
             [
-                "title" => "All Post",
+                "title" => "All Post" . $title,
                 "active" => "posts",
-                // "posts" => Post::all() //  untuk mendapatkan semua data postingan
-                "posts" => Post::latest()->get() //  untuk mendapatkan data terakhir ditambahkan
+                "posts" => Post::latest()->filter(request(['search', 'category', 'author']))
+                    ->paginate(7)->withQueryString()
+                // tambahkan filter berdasarkan request sebelum ambil data
             ]
         );
     }
