@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Models\Category;
 
 use Illuminate\Support\Facades\Route;
@@ -69,8 +70,17 @@ Route::get('/categories', function () {
     );
 });
 
+// middleware, ibarat satpam alias penjaga route kita
 
-Route::get('/login', [LoginController::class, 'index']);
+// arahkan hanya ke login apabila ia belum ter-authentikasi alias belum login
+// kita perlu gunakan named routing, agar Auth mengenali route yang untuk login, jadi tidak perlu melalui URL nya
+Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::post('/logout', [LoginController::class, 'logout']);
 
-Route::get('/register', [RegisterController::class, 'index']);
+// hanya bisa diakses ketika auth nya adalah guest alias belum login
+Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store']);
+
+// hanya bisa diakses ketika ia sudah ter-authentikasi alias sudah login
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
