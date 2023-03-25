@@ -3,6 +3,16 @@
 @section('container')
     <div class="row justify-content-center">
         <div class="col-md-4">
+
+            {{-- jika ada session yang key nya adalah succes --}}
+            @if (session()->has('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{-- tampilkan isi pesan dari flash message nya --}}
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <main class="form-signin">
                 <h1 class="h3 mb-3 fw-normal text-center">Please Login</h1>
 
