@@ -80,4 +80,10 @@ class Post extends Model
         // belongsTo artinya 1 postingan hanya dimiliki oleh 1 user
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    // method yang kita definisikan bahwa route/url akan mencari value dengan nilai default nya adalah slug
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

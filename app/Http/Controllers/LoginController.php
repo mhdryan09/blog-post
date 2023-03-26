@@ -13,7 +13,6 @@ class LoginController extends Controller
             'login.index',
             [
                 'title' => 'Login',
-                'active' => 'login'
             ]
         );
     }
