@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Category;
+
 use Illuminate\Http\Request;
-use \Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Support\Str;
+
+use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class DashboardPostController extends Controller
 {
@@ -42,7 +45,26 @@ class DashboardPostController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
+        // validasi data
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'slug' => 'required|unique:posts', // unique dari tabel post
+            'category_id' => 'required',
+            'body' => 'required'
+        ]);
+
+        // tambahkan data user id
+        $validatedData['user_id'] = auth()->user()->id;
+
+        // tambahkan data excerpt yg diambil dari body
+        // strip_tags, untuk menghapus tag html di dalam inputan body
+        $validatedData['excerpt'] = Str::limit(strip_tags($request->body), 200);
+
+        // insert data ke tabel Post
+        Post::create($validatedData);
+
+        // arahhkan ke halaman dahsboard dan alert
+        return redirect('/dashboard/posts')->with('success', 'New post has beed added!');
     }
 
     /**
