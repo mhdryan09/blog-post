@@ -50,8 +50,17 @@ class DashboardPostController extends Controller
             'title' => 'required|max:255',
             'slug' => 'required|unique:posts', // unique dari tabel post
             'category_id' => 'required',
+            'image' => 'image|file|max:1024',
             'body' => 'required'
         ]);
+
+        // pengecekan upload gambar
+
+        // jika gambar ada isinya (di-upload)
+        if ($request->file('image')) {
+            // ambil file image lalu arahkan ke folder mana yang mau disimpan
+            $validatedData['image'] = $request->file('image')->store('post-images');
+        }
 
         // tambahkan data user id
         $validatedData['user_id'] = auth()->user()->id;

@@ -5,7 +5,7 @@
         <h1 class="h2">My Posts</h1>
     </div>
 
-    <div class="table-responsive col-lg-8">
+    <div class="table-responsive col-lg-10">
         <a href="/dashboard/posts/create" class="btn btn-primary mb-3">
             Create New Post
         </a>

@@ -22,7 +22,7 @@ class LoginController extends Controller
 
         // validasi form request login
         $credentials = $request->validate([
-            'email' => 'required|email:dns',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
 
