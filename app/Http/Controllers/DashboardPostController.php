@@ -88,7 +88,10 @@ class DashboardPostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('dashboard.posts.edit', [
+            'post' => $post,
+            'categories' => Category::all()
+        ]);
     }
 
     /**
@@ -100,7 +103,37 @@ class DashboardPostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        // kita buat aturan nya
+        $rules = [
+            'title' => 'required|max:255',
+            'category_id' => 'required',
+            'body' => 'required'
+        ];
+
+        // kalau slug yang baru (dari inputan) itu tidak sama dengan slug yang lama (yang ada di tabel)
+
+        // jika slug nya berbeda
+        if ($request->slug != $post->slug) {
+            // tambahkan validasi slug nya
+            $rules['slug'] = 'required|unique:posts';
+        }
+
+        // validasi data
+        $validatedData = $request->validate($rules);
+
+        // tambahkan data user id
+        $validatedData['user_id'] = auth()->user()->id;
+
+        // tambahkan data excerpt yg diambil dari body
+        // strip_tags, untuk menghapus tag html di dalam inputan body
+        $validatedData['excerpt'] = Str::limit(strip_tags($request->body), 200);
+
+        // update data ke tabel Post
+        Post::where('id', $post->id)
+            ->update($validatedData);
+
+        // arahhkan ke halaman dahsboard dan alert
+        return redirect('/dashboard/posts')->with('success', 'Post has been updated!');
     }
 
     /**
@@ -111,7 +144,11 @@ class DashboardPostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        // delete data dari tabel Post berdasarkan id
+        Post::destroy($post->id);
+
+        // arahhkan ke halaman dahsboard dan alert
+        return redirect('/dashboard/posts')->with('success', 'Post has been deleted!');
     }
 
     public function checkSlug(Request $request)
