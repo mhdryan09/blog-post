@@ -6,13 +6,13 @@
     </div>
 
     <div class="col-lg-8">
-        <form action="/dashboard/posts/{{ $post->slug }}" method="POST" class="mb-5">
+        <form action="/dashboard/posts/{{ $post->slug }}" method="POST" class="mb-5" enctype="multipart/form-data">
             @method('PUT')
             @csrf
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title"
-                    required autofocus value="{{ old('title', $post->title) }}">
+                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title"
+                    name="title" required autofocus value="{{ old('title', $post->title) }}">
                 @error('title')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -46,6 +46,26 @@
                     @endforeach
                 </select>
             </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label">Post Image</label>
+                {{-- menampilkan data gambar lama --}}
+                <input type="hidden" name="oldImage" value="{{ $post->image }}">
+                @if ($post->image)
+                    <img src="{{ asset('storage/' . $post->image) }}" class="img-preview img-fluid mb-3 d-block col-sm-5">
+                @else
+                    <img class="img-preview img-fluid mb-3 col-sm-5">
+                @endif
+
+                <input class="form-control @error('image') is-invalid @enderror" type="file" id="image"
+                    name="image" onchange="previewImage()">
+                @error('image')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
             <div class="mb-3">
                 <label for="body" class="form-label">Body</label>
                 @error('body')
@@ -75,5 +95,23 @@
         document.addEventListener('trix-file-accept', function(e) {
             e.preventDefault()
         });
+
+        function previewImage() {
+            // ambil inputan image
+            const image = document.querySelector('#image');
+            // ambil gambar yang kosong
+            const imgPreview = document.querySelector('.img-preview');
+
+            // ubah style
+            imgPreview.style.display = 'block';
+
+            // ambil gambar
+            const oFReader = new FileReader();
+            oFReader.readAsDataURL(image.files[0]);
+
+            oFReader.onload = function(OFREvent) {
+                imgPreview.src = OFREvent.target.result;
+            }
+        }
     </script>
 @endsection

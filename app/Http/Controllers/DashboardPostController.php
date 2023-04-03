@@ -7,6 +7,7 @@ use App\Models\Category;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
@@ -116,6 +117,7 @@ class DashboardPostController extends Controller
         $rules = [
             'title' => 'required|max:255',
             'category_id' => 'required',
+            'image' => 'image|file|max:1024',
             'body' => 'required'
         ];
 
@@ -129,6 +131,18 @@ class DashboardPostController extends Controller
 
         // validasi data
         $validatedData = $request->validate($rules);
+
+        // jika gambar ada isinya (di-upload)
+        if ($request->file('image')) {
+            // kalau gambar lama nya ada
+            if ($request->oldImage) {
+                // hapus data gambar lama dulu
+                Storage::delete($request->oldImage);
+            }
+
+            // ambil file image lalu arahkan ke folder mana yang mau disimpan
+            $validatedData['image'] = $request->file('image')->store('post-images');
+        }
 
         // tambahkan data user id
         $validatedData['user_id'] = auth()->user()->id;
@@ -153,6 +167,12 @@ class DashboardPostController extends Controller
      */
     public function destroy(Post $post)
     {
+        // hapus file gambar nya
+        if ($post->image) {
+            // hapus data gambar 
+            Storage::delete($post->image);
+        }
+
         // delete data dari tabel Post berdasarkan id
         Post::destroy($post->id);
 
